@@ -1,0 +1,32 @@
+from collections import defaultdict, deque
+
+def bfs_paths(graph, start, goal):
+    queue = deque([(start, [start])])
+    while queue:
+        current, path = queue.popleft()
+        if current == goal:
+            yield path
+        for neighbor in graph[current]:
+            if neighbor not in path:
+                queue.append((neighbor, path + [neighbor]))
+
+# Example graph representing connections between cities in Pakistan
+pakistan_graph = {
+    'Islamabad': ['Rawalpindi', 'Lahore', 'Peshawar'],
+    'Rawalpindi': ['Islamabad', 'Lahore', 'Faisalabad'],
+    'Lahore': ['Islamabad', 'Rawalpindi', 'Faisalabad', 'Multan'],
+    'Faisalabad': ['Rawalpindi', 'Lahore', 'Multan'],
+    'Multan': ['Lahore', 'Faisalabad', 'Karachi'],
+    'Karachi': ['Multan', 'Hyderabad'],
+    'Peshawar': ['Islamabad', 'Abbottabad'],
+    'Abbottabad': ['Peshawar', 'Murree'],
+    'Murree': ['Abbottabad'],
+    'Hyderabad': ['Karachi']
+}
+
+start_city = 'Islamabad'
+goal_city = 'Karachi'
+
+print(f"Paths from {start_city} to {goal_city}:")
+for path in bfs_paths(pakistan_graph, start_city, goal_city):
+    print(' -> '.join(path))
