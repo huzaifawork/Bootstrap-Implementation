@@ -1,0 +1,30 @@
+from collections import defaultdict, deque
+
+def bfs(graph, start):
+    visited = set()
+    queue = deque([start])
+    visited.add(start)
+
+    while queue:
+        vertex = queue.popleft()
+        print(vertex, end=" ")
+
+        for neighbor in graph[vertex]:
+            if neighbor not in visited:
+                queue.append(neighbor)
+                visited.add(neighbor)
+
+# Example graph representing connections between nodes at COMSATS
+comsats_graph = {
+    'CUI Islamabad': ['CUI Lahore', 'CUI Abbottabad', 'CUI Vehari'],
+    'CUI Lahore': ['CUI Islamabad', 'CUI Abbottabad', 'CUI Wah'],
+    'CUI Abbottabad': ['CUI Islamabad', 'CUI Lahore', 'CUI Wah'],
+    'CUI Vehari': ['CUI Islamabad', 'CUI Wah'],
+    'CUI Wah': ['CUI Lahore', 'CUI Abbottabad', 'CUI Vehari']
+}
+
+# Starting node for BFS
+start_node = 'CUI Islamabad'
+
+print("BFS Traversal:")
+bfs(comsats_graph, start_node)
