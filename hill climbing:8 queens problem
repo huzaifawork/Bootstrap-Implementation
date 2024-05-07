@@ -1,0 +1,72 @@
+import random
+
+def initial_state(n):
+    """Generate a random initial state for the 8-queen problem."""
+    return [random.randint(0, n-1) for _ in range(n)]
+
+def attack_pairs(state):
+    """Calculate the number of pairs of queens attacking each other."""
+    n = len(state)
+    attacks = 0
+    for i in range(n):
+        for j in range(i+1, n):
+            if state[i] == state[j] or abs(state[i] - state[j]) == abs(i - j):
+                attacks += 1
+    return attacks
+
+def next_states(state):
+    """Generate all possible next states by moving one queen at a time."""
+    n = len(state)
+    states = []
+    for i in range(n):
+        for j in range(n):
+            if j != state[i]:
+                new_state = list(state)
+                new_state[i] = j
+                states.append(new_state)
+    return states
+
+def hill_climbing(n):
+    """Solve the 8-queen problem using Hill-Climbing."""
+    current_state = initial_state(n)
+    current_attacks = attack_pairs(current_state)
+    
+    while True:
+        next_states_list = next_states(current_state)
+        next_attacks = [attack_pairs(state) for state in next_states_list]
+        best_next_state = next_states_list[next_attacks.index(min(next_attacks))]
+        best_next_attacks = min(next_attacks)
+        
+        if best_next_attacks >= current_attacks:
+            break
+        
+        current_state = best_next_state
+        current_attacks = best_next_attacks
+    
+    return current_state
+
+def print_board(state):
+    """Print the chess board with queens placed."""
+    n = len(state)
+    for row in range(n):
+        line = ""
+        for col in range(n):
+            if state[row] == col:
+                line += "Q "
+            else:
+                line += ". "
+        print(line)
+
+if __name__ == "__main__":
+    # Solve the 8-queen problem using hill climbing
+    solution1 = hill_climbing(8)
+    
+    # Find another solution by solving again
+    solution2 = hill_climbing(8)
+    while solution2 == solution1:  # Ensure the second solution is different from the first
+        solution2 = hill_climbing(8)
+    
+    print("Solution 1:")
+    print_board(solution1)
+    print("\nSolution 2:")
+    print_board(solution2)
